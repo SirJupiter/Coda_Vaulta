@@ -1,8 +1,14 @@
 #!/usr/bin/python3
-"""This module contains credentials for accessing database"""
+"""This module loads credentials for accessing database from a .env file"""
 
-DB = 'codavaulta_db'
-USER = 'codavaulta_user'
-PASSWORD = 'codavaulta_password'
-HOST = 'localhost'
-PORT = '3306'
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+
+DB = os.getenv('DB')
+USER = os.getenv('DB_USER')
+PASSWORD = os.getenv('PASSWORD')
+HOST = os.getenv('HOST')
+PORT = os.getenv('PORT')
