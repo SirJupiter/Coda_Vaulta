@@ -1,0 +1,232 @@
+:root {
+  --dark-color: #000;
+  --light-color: #fff;
+  --medium-dark: #2d2d2d;
+  --secondary-color: orange;
+  --deeper-secondary-color: rgb(143, 97, 13);
+  --tertiary-color: rgb(73, 64, 64);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  line-height: 1.5;
+  font-family: 'Source Sans 3', sans-serif;
+  background-color: var(--dark-color);
+  color: var(--light-color);
+}
+
+/* UTILITIES */
+.btn {
+  display: inline-block;
+  background-color: var(--light-color);
+  font-size: 16px;
+  color: var(--dark-color);
+  text-align: center;
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: var(--secondary-color);
+}
+
+.toggle-password1, .toggle-password2 {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 1rem;
+  cursor: pointer;
+  color: var(--tertiary-color);
+}
+
+/* INDEX.HTML */
+#container-a {
+  /* height: 60vh; */
+  max-width: 1850px;
+  margin: 20px auto 10px;
+  background-color: var(--medium-dark);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+#container-b {
+  height: 30vh;
+  max-width: 1850px;
+  margin: 10px auto 18px;
+}
+
+#container-c {
+  /* height: 40px; */
+  max-width: 100%;
+  margin: 10px 0 20px;
+  background-color: var(--medium-dark);
+  overflow: hidden;
+}
+
+#inner-container {
+  height: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+#container-a nav {
+  margin-top: 1.2rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#container-a nav .logo {
+  font-size: 20px;
+  /* font-weight: bold; */
+}
+
+#container-a nav button {
+  font-size: 15px;
+  padding: 0.8rem 1.8rem;
+  border-style: none;
+  border-radius: 24px;
+  margin-left: 1rem;
+}
+
+#container-a nav #nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  list-style: none;
+  margin-left: 10rem;
+}
+
+#container-a nav #nav ul li {
+  display: inline-block;
+  margin: 0 1rem;
+}
+
+#container-a nav #nav ul li a {
+  text-decoration: none;
+  color: var(--light-color);
+  font-size: 18px;
+  /* font-weight: lighter; */
+}
+
+#container-a nav #nav ul li a:hover {
+  color: var(--secondary-color);
+  transition: all 0.6s ease-in-out;
+}
+
+#container-a header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  margin: 6rem 0;
+}
+
+#container-a header .header-board {
+  max-width: 40%;
+  /* flex-grow: 1; */
+}
+
+#container-a header .header-board h4 {
+  font-size: 52px;
+  line-height: 1.3;
+  /* flex-grow: 1; */
+}
+
+#container-a header .header-board p {
+  margin-top: 10px;
+  margin-bottom: 3.5rem;
+  font-size: 18px;
+}
+
+#container-a header .header-board button {
+  padding: 0.8rem 2.4rem;
+  border-radius: 24px;
+  font-size: 15px;
+}
+
+#container-a header .header-icon {
+  margin: 0 auto;
+}
+
+#container-a header .header-icon i {
+  font-size: 230px;
+  margin-left: 20rem;
+}
+
+/* #container-b section {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-evenly;
+  height: 100%;
+} */
+
+#container-b section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  /* justify-items: spac; */
+  height: 100%;
+  gap: 18px;
+  margin: 1rem 0;
+
+  /* overflow-x: scroll; */
+}
+
+#container-b section .cards {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6rem 3rem 0;
+  background-color: var(--medium-dark);
+  border-radius: 20px;
+  height: 100%;
+}
+
+#container-b section .cards .card-text p {
+  font-size: 18px;
+}
+
+#container-b section .cards .card-text h4 {
+  font-size: 44px;
+  font-weight: normal;
+}
+
+#container-c .footer {
+  height: 28vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+#container-c .footer h3 {
+  font-size: 16px;
+  margin-bottom: 1rem;
+}
+
+#container-c .footer p {
+  font-size: 15px;
+}
+
+#container-c .footer .footer-connect a {
+  text-decoration: none;
+  color: var(--light-color);
+}
+
+#container-c .footer .footer-connect i {
+  margin-right: 1rem;
+}
+
+#container-c .copyright {
+  text-align: center;
+  border-top: 1px solid #5c5c5c;
+  padding: 1rem 0;
+}
