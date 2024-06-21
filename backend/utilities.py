@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Module containers validators and hashing function"""
 
+from datetime import datetime
 import re
 import bcrypt
 
@@ -75,3 +76,37 @@ def verify_password(password, hashed_password):
     if isinstance(hashed_password, str):
         hashed_password = hashed_password.encode('utf-8')
     return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
+
+
+def get_ordinal_suffix(day):
+    """Return ordinal suffix for the day, e.g., 'th', 'rd', 'nd', 'st'."""
+    if 10 <= day <= 20:
+        suffix = 'th'
+    else:
+        suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
+    return suffix
+
+
+def format_datetime(dt_input):
+    """
+    Format datetime object or ISO format string to
+    '12th May 2024 at 22:45' format.
+    """
+    # Check if dt_input is a string, then parse it
+    if isinstance(dt_input, str):
+        try:
+            dt = datetime.fromisoformat(dt_input)
+        except ValueError:
+            raise ValueError("String input must be in ISO format")
+    elif isinstance(dt_input, datetime):
+        dt = dt_input
+    else:
+        raise TypeError("Must be a datetime object or a string in ISO format")
+
+    # Extract the day and determine its ordinal suffix
+    day = dt.day
+    ordinal_suffix = get_ordinal_suffix(day)
+
+    # Format the datetime object, manually inserting the ordinal suffix
+    formatted_date = dt.strftime(f'%-d{ordinal_suffix} %B %Y at %H:%M')
+    return formatted_date

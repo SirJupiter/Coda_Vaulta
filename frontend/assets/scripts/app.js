@@ -10,13 +10,9 @@ class App {
     this.signInOverlay = document.getElementById('sign-in-overlay');
 
     this.snippetSection = document.querySelector('#container-b section');
-    this.cardContainer = '';
     this.originalCards = '';
     this.headerBoard = document.querySelector('.header-board');
     this.snippetDisplayBoard = document.querySelector('.snippet-display-board');
-    this.snippetDisplay = document.querySelector('.snippet-display');
-
-    this.snippetForm = document.getElementById('snippetForm');
     this.username = '';
     this.authToken = '';
     this.initEvents();
@@ -79,16 +75,6 @@ class App {
       // event.preventDefault();
       this.handleSignIn(event);
     });
-
-    // Prevent the snippet-creation form from closing when it's clicked
-    this.snippetForm.addEventListener('click', (event) => {
-      event.stopPropagation();
-    });
-
-    // Handle snippet form submission
-    this.snippetForm.addEventListener('submit', (event) => {
-      this.handleSnippetCreation(event);
-    });
   }
 
   isEmptyLocalStorage() {
@@ -139,9 +125,10 @@ class App {
 
   showRegisterOverlay() {
     this.registerOverlay.style.display = 'flex';
-
+    // this.signInOverlay.style.display = 'none';
     document.querySelector('.success').style.display = 'none';
     document.querySelector('.drop').style.display = 'flex';
+    // this.registerForm.reset();
   }
 
   showSignInOverlay() {
@@ -150,6 +137,7 @@ class App {
     const inDropElement = document.querySelector('.in-drop');
     console.log('in-drop element:', inDropElement); // Verify the element is selected correctly
     inDropElement.style.display = 'flex';
+    // document.querySelector('.in-drop').style.display = 'flex';
   }
 
   hideRegisterOverlay() {
@@ -161,7 +149,7 @@ class App {
   }
 
   handleSubmit(event) {
-    event.preventDefault();
+    event.preventDefault(); // Prevent the default form submission
 
     // Collect form data
     const formData = new FormData(this.registerForm);
@@ -201,7 +189,7 @@ class App {
       .catch((error) => {
         console.error('Error:', error.message);
         // Handle errors here
-        const errorMessage = document.createElement('h4');
+        const errorMessage = document.createElement('h3');
         errorMessage.textContent = error.message;
         errorMessage.style.color = 'red';
         this.registerForm
@@ -270,8 +258,8 @@ class App {
       })
       .catch((error) => {
         console.error('Error:', error.message);
-
-        const errorMessage = document.createElement('h4');
+        // Handle errors here
+        const errorMessage = document.createElement('h3');
         errorMessage.textContent = error.message;
         errorMessage.style.color = 'red';
         this.signInForm
@@ -307,168 +295,10 @@ class App {
         this.hideSnippetDisplayBoard();
         this.removeDisplaySnippets();
         this.hideCreateSnippetForm();
-        this.snippetForm.reset();
       })
       .catch((error) => {
         console.error('Error:', error.message);
       });
-  }
-
-  handleSnippetCreation(event) {
-    event.preventDefault();
-    const formData = new FormData(this.snippetForm);
-    const snippet = {
-      title: formData.get('title'),
-      description: formData.get('description'),
-      language: formData.get('language'),
-      code: formData.get('code'),
-    };
-
-    this.createSnippet(snippet)
-      .then((data) => {
-        console.log(data);
-
-        this.renderSnippetOnSnippetBoard(data);
-        this.displaySnippets();
-
-        this.snippetForm.reset();
-      })
-      .catch((error) => {
-        console.error(error.message);
-
-        const errorMessage = document.createElement('h4');
-        errorMessage.textContent = error.message;
-        errorMessage.style.color = 'red';
-        errorMessage.style.fontWeight = 'normal';
-        errorMessage.style.fontSize = '16px';
-        this.snippetForm
-          .querySelector('.input-bx:last-child')
-          .before(errorMessage);
-
-        setTimeout(() => {
-          errorMessage.remove();
-        }, 3000);
-      });
-  }
-
-  renderSnippetOnSnippetBoard(snippet) {
-    const { title, code, description, language } = snippet;
-
-    // Create the title element
-    if (title) {
-      const titleElement = document.querySelector('.snippet-display-header h5');
-      titleElement.textContent = title;
-    }
-
-    // Create the description element
-    if (description) {
-      const descriptionElement = document.querySelector('.snippet-desc');
-      descriptionElement.textContent = description;
-    }
-
-    const codeBlock = document.querySelector('.snippet-display-body code');
-
-    codeBlock.classList.add(`language-${language}`); // Use the detected language for the class
-    codeBlock.textContent = code;
-    Prism.highlightElement(codeBlock);
-
-    // Display the detected language
-    const languageElement = document.querySelector('.snippet-language');
-    languageElement.textContent = language;
-
-    const downloadBtn = document.querySelector('.download');
-    downloadBtn.onclick = () =>
-      this.downloadSnippetAsImage(code, title || 'snippet');
-
-    const editBtn = document.querySelector('.edit');
-    editBtn.onclick = () => {};
-
-    const deleteBtn = document.querySelector('.delete');
-    deleteBtn.onclick = () => {
-      this.deleteSnippet(snippet)
-        .then((data) => {
-          console.log(data);
-          const deleteMessage = document.createElement('h4');
-          deleteMessage.textContent = data.message;
-
-          Object.assign(deleteMessage.style, {
-            color: 'green',
-            fontWeight: 'normal',
-            fontSize: '16px',
-            paddingTop: '10px',
-          });
-
-          this.snippetDisplay.style.display = 'none';
-          this.snippetDisplayBoard.style.display = 'none';
-          this.snippetDisplayBoard.parentNode.insertBefore(
-            deleteMessage,
-            this.snippetDisplayBoard.parentNode.firstChild
-          );
-
-          this.displaySnippets();
-
-          setTimeout(() => {
-            deleteMessage.remove();
-            this.snippetDisplayBoard.style.display = 'block';
-          }, 3000);
-        })
-
-        .catch((error) => {
-          console.error(error.message);
-
-          const errorMessage = document.createElement('h4');
-          errorMessage.textContent = error.message;
-          errorMessage.style.color = 'red';
-          errorMessage.style.fontWeight = 'normal';
-          errorMessage.style.marginTop = '1rem';
-          errorMessage.style.fontSize = '16px';
-
-          this.snippetDisplay.insertAdjacentElement('afterend', errorMessage);
-
-          setTimeout(() => {
-            errorMessage.remove();
-          }, 3000);
-        });
-    };
-
-    // Append the snippet container to the snippet board
-    this.snippetDisplay.style.display = 'block';
-    this.snippetDisplayBoard.style.display = 'block';
-  }
-
-  downloadSnippetAsImage(code, filename) {
-    // Create a canvas element
-    const canvas = document.createElement('canvas');
-    canvas.width = 800;
-    canvas.height = 600;
-    const ctx = canvas.getContext('2d');
-
-    // Set canvas background (optional)
-    ctx.fillStyle = '#fff'; // White background
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Prepare text
-    ctx.fillStyle = '#000';
-    ctx.font = '16px monospace';
-    const lines = code.split('\n');
-    let startY = 20; // Start position for the text
-
-    // Draw text onto canvas
-    lines.forEach((line) => {
-      ctx.fillText(line, 10, startY); // Adjust positioning as needed
-      startY += 20; // Line height
-    });
-
-    // Convert canvas to JPEG URL
-    const imageURL = canvas.toDataURL('image/jpeg');
-
-    // Trigger download
-    const link = document.createElement('a');
-    link.href = imageURL;
-    link.download = `${filename}.jpg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   }
 
   isLoggedIn() {
@@ -494,10 +324,6 @@ class App {
   async createSnippet(snippet) {
     const response = await this.fetchWithAuth('user/create_snippet', {
       method: 'POST',
-      headers: {
-        'content-Type': 'application/json',
-      },
-      mode: 'cors',
       body: JSON.stringify(snippet),
     });
 
@@ -526,11 +352,9 @@ class App {
     }
   }
 
-  async deleteSnippet(snippet) {
+  async deleteSnippet() {
     const response = await this.fetchWithAuth('user/delete_snippet', {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(snippet),
     });
 
     const responseData = await response.json();
@@ -549,11 +373,11 @@ class App {
           console.log(snippets);
 
           const cards = Array.from(document.getElementsByClassName('cards'));
-          const originalCards = [...cards];
-          this.originalCards = originalCards;
+          const originalcCards = [...cards];
+          this.originalCards = originalcCards;
 
           if (snippets.length > 0) {
-            this.displaySnippetsList(snippets);
+            this.displaySnippetsList();
           } else {
             const message = `${this.username}, you have no snippets yet.`;
             this.displayNoSnippetsMessage(message);
@@ -566,73 +390,25 @@ class App {
   }
 
   displayNoSnippetsMessage(message) {
-    // Remove all child of snippetSection
+    // Hide cards in section first
+    // this.snippetSection.classList.add('hide-children');
     this.snippetSection.innerHTML = '';
 
     // Create and append error message
-    const errorMessage = document.createElement('h5');
+    const errorMessage = document.createElement('h3');
     errorMessage.textContent = message;
     errorMessage.style.color = 'white';
     errorMessage.style.fontWeight = 'normal';
     this.snippetSection.appendChild(errorMessage);
 
     Object.assign(this.snippetSection.style, {
-      display: 'flex',
-      textAlign: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-    });
-  }
-
-  displaySnippetsList(snippets) {
-    // Remove all child of snippetSection
-    // while (this.snippetSection.lastChild) {
-    //   this.snippetSection.lastChild.style.display = 'none';
-    // }
-    this.snippetSection.innerHTML = '';
-    Object.assign(this.snippetSection.style, {
       display: 'block',
-      textAlign: 'unset',
-      alignContent: 'unset',
-      overflow: 'auto',
-      width: '90%',
-      margin: '0 auto',
+      textAlign: 'center',
+      alignContent: 'center',
     });
-
-    const cardContainer = document.createElement('div');
-    cardContainer.classList.add('card-container', 'snaps-inline');
-
-    // Create and append the snippet cards
-    snippets.forEach((snippet) => {
-      const card = this.createSnippetCard(snippet);
-
-      card.addEventListener('click', () =>
-        this.renderSnippetOnSnippetBoard(snippet)
-      );
-      cardContainer.appendChild(card);
-    });
-
-    this.snippetSection.appendChild(cardContainer);
-    // this.cardContainer = cardContainer;
   }
 
-  createSnippetCard(snippet) {
-    const card = document.createElement('div');
-    card.classList.add('card', 'inconsolata-text');
-
-    const title = document.createElement('h5');
-    title.className = 'card-title';
-    title.textContent = snippet.title;
-
-    const created = document.createElement('p');
-    created.className = 'card-created';
-    created.textContent = `Created: ${snippet.updated_at}`;
-
-    card.appendChild(title);
-    card.appendChild(created);
-
-    return card;
-  }
+  displaySnippetsList() {}
 
   showCreateSnippetForm() {
     // Show the create snippet form
@@ -657,19 +433,25 @@ class App {
   }
 
   removeDisplaySnippets() {
+    // // Remove error message if it exists
+    // const errorMessage = this.snippetSection.querySelector('h3');
+    // if (errorMessage) {
+    //   this.snippetSection.removeChild(errorMessage);
+    // }
+
+    // // Remove snippets list if it exists
+    // const snippetsList = this.snippetSection.querySelector('#user-snippets');
+    // if (snippetsList) {
+    //   this.snippetSection.removeChild(snippetsList);
+    // }
+    // // Not done here yet
+
+    // // Remove hide-children class from section to show cards again
+    // this.snippetSection.classList.remove('hide-children');
+
     this.snippetSection.innerHTML = '';
     this.originalCards.forEach((card) => {
       this.snippetSection.appendChild(card);
-    });
-
-    // this.cardContainer.remove();
-    // while (this.snippetSection.lastChild) {
-    //   this.snippetSection.lastChild.style.display = 'flex';
-    // }
-    Object.assign(this.snippetSection.style, {
-      display: 'grid',
-      textAlign: 'unset',
-      alignContent: 'unset',
     });
   }
 }

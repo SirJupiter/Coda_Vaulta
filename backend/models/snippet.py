@@ -18,6 +18,7 @@ class Snippet(Base):
         snippet_id (str): id of created snippet
         title (str): title of snippet
         code (str): code to be formatted into snippet
+        language (str): language of code to be formatted
         description (str): description of the code
         created_at (datetime): time snippet was created
         updated_at (datetime): time snippet was edited/updated
@@ -28,15 +29,16 @@ class Snippet(Base):
 
     snippet_id = Column(String(60), primary_key=True)
     title = Column(String(60), nullable=False)
-    code = Column(String(60), nullable=False)
     description = Column(String(60), nullable=True)
+    language = Column(String(20), nullable=False)
+    code = Column(String(2048), nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.now())
     updated_at = Column(DateTime, nullable=False, default=datetime.now())
     user_id = Column(String(60), ForeignKey('users.user_id'), nullable=False)
 
     number_of_snippets = 0
 
-    def __init__(self, title, code, description, user_id):
+    def __init__(self, title, code, description, language, user_id):
         """Creates a snippet object at instantiation
 
         Args:
@@ -49,13 +51,16 @@ class Snippet(Base):
             raise ValueError('Title cannot be empty')
         if not code:
             raise ValueError('Code cannot be empty')
+        if not language:
+            raise ValueError('Language cannot be empty')
         if not user_id:
             raise ValueError('User_id must be present')
 
         self.snippet_id = str(uuid4())
         self.title = title
-        self.code = code
         self.description = description
+        self.language = language
+        self.code = code
         self.user_id = user_id
         self.created_at = datetime.now()
         self.updated_at = datetime.now()

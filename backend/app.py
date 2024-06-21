@@ -14,7 +14,7 @@ from models.snippet import Snippet
 from models import storage
 from datetime import timedelta
 from flask_cors import CORS
-from utilities import verify_password
+from utilities import verify_password, format_datetime
 
 
 app = Flask(__name__)
@@ -26,11 +26,20 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
 # Initialize JWT Manager
 jwt = JWTManager(app)
 
-CORS(app)
+# CORS(app)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 # CORS(app, resources={r"/api/*": {"origins": "http://localhost:5000"}})
 
 # Blueprint creation
 api = Blueprint('api', __name__)
+
+accepted_languages = [
+        'javascript', 'c', 'csharp', 'python', 'jsx', 'c++', 'ruby', 'dart',
+        'java', 'swift', 'go', 'typescript', 'php', 'html', 'css', 'sql',
+        'rust', 'bash', 'tsx', 'html', 'css', 'cpp', 'django', 'graphql',
+        'regex', 'aspnet', 'yaml', 'fortran', 'go', 'pascal', 'php',
+        'objectivec', 'visual-basic'
+    ]
 
 
 @app.teardown_appcontext
@@ -220,6 +229,11 @@ def get_all_snippets():
     all_snippets = storage.all('Snippet')
     if all_snippets:
         snippets = [snippet.to_dict() for snippet in all_snippets]
+
+        for snippet in snippets:
+            snippet['created_at'] = format_datetime(snippet['created_at'])
+            snippet['updated_at'] = format_datetime(snippet['updated_at'])
+
         return jsonify(snippets), 200
     else:
         return jsonify({"error": "No snippet found"}), 200
@@ -231,7 +245,8 @@ def create_user_snippet():
     """
     Endpoint for creating a new snippet.
     Requires a valid JWT token.
-    Expects a JSON payload with 'title', 'code', and optionally 'description'.
+    Expects a JSON payload with 'title', 'code', 'language'
+    and optionally 'description'.
     Returns a JSON response with details of the created snippet.
     """
     if not request.is_json:
@@ -240,6 +255,8 @@ def create_user_snippet():
     data_received = request.get_json()
     if 'title' not in data_received:
         return jsonify({"error": "Missing title"}), 400
+    if 'language' not in data_received:
+        return jsonify({"error": "Missing language"}), 400
     if 'code' not in data_received:
         return jsonify({"error": "Missing code"}), 400
 
@@ -248,11 +265,21 @@ def create_user_snippet():
     else:
         description = data_received.get('description')
     title, code = data_received.get('title'), data_received.get('code')
+    language = data_received.get('language').replace(
+        ' ', '').replace('#', '').replace('.', '')
+
+    if not language.isalpha():
+        return jsonify({"error": "Language must be alphabets only"}), 400
+
+    language = language.lower()
+
+    if language not in accepted_languages:
+        return jsonify({"error": "Language not supported"}), 400
 
     user_id = get_jwt_identity()
 
     try:
-        snippet = Snippet(title, code, description, user_id)
+        snippet = Snippet(title, code, description, language, user_id)
         storage.new(snippet)
         storage.save()
 
@@ -260,14 +287,75 @@ def create_user_snippet():
             "message": "Snippet created successfully",
             "snippet_id": snippet.snippet_id,
             "title": snippet.title,
+            "description": snippet.description,
+            "language": snippet.language,
             "code": snippet.code,
-            "description": snippet.description
+            "created_at": format_datetime(snippet.created_at),
+            "updated_at": format_datetime(snippet.updated_at)
             }), 201
     except Exception as e:
         return jsonify({"error": e}), 400
 
     # In the future, return an html page with 'you are not logged in'
     # include a link to serve the landing page for user to login
+
+
+@api.route('/create_snippet', methods=['POST'], strict_slashes=False)
+def create_snippet():
+    """
+    Endpoint for creating a new snippet - admin
+    Requires no JWT token.
+    Expects a JSON payload with 'title', 'code', 'language', 'user_id'
+    and optionally 'description'.
+    Returns a JSON response with details of the created snippet.
+    """
+    if not request.is_json:
+        return jsonify({"error": "Not a JSON"}), 400
+
+    data_received = request.get_json()
+    if 'title' not in data_received:
+        return jsonify({"error": "Missing title"}), 400
+    if 'language' not in data_received:
+        return jsonify({"error": "Missing language"}), 400
+    if 'code' not in data_received:
+        return jsonify({"error": "Missing code"}), 400
+    if 'user_id' not in data_received:
+        return jsonify({"error": "Missing user id"}), 400
+
+    if 'description' not in data_received:
+        description = ''
+    else:
+        description = data_received.get('description')
+    title, code = data_received.get('title'), data_received.get('code')
+    user_id = data_received.get('user_id')
+    language = data_received.get('language').replace(
+        ' ', '').replace('#', '').replace('.', '')
+
+    if not language.isalpha():
+        return jsonify({"error": "Language must be alphabets only"}), 400
+
+    language = language.lower()
+
+    if language not in accepted_languages:
+        return jsonify({"error": "Language not supported"}), 400
+
+    try:
+        snippet = Snippet(title, code, description, language, user_id)
+        storage.new(snippet)
+        storage.save()
+
+        return jsonify({
+            "message": "Snippet created successfully",
+            "snippet_id": snippet.snippet_id,
+            "title": snippet.title,
+            "description": snippet.description,
+            "language": snippet.language,
+            "code": snippet.code,
+            "created_at": format_datetime(snippet.created_at),
+            "updated_at": format_datetime(snippet.updated_at)
+            }), 201
+    except Exception as e:
+        return jsonify({"error": e}), 400
 
 
 @api.route('/user/get_snippets', methods=['GET'], strict_slashes=False)
@@ -282,6 +370,11 @@ def get_user_snippets():
     snippets = storage.get_snippets_by_user_id(user_id)
     if snippets:
         snippets = [snippet.to_dict() for snippet in snippets]
+
+        for snippet in snippets:
+            snippet['created_at'] = format_datetime(snippet['created_at'])
+            snippet['updated_at'] = format_datetime(snippet['updated_at'])
+
         return jsonify(snippets), 200
     else:
         return jsonify({"error": "No snippet found"}), 200
@@ -321,6 +414,22 @@ def update_user_snippet():
                     snippet.code = data_received.get('code')
                 if 'description' in data_received:
                     snippet.description = data_received.get('description')
+                if 'language' in data_received:
+                    language = data_received.get('language').replace(
+                        ' ', '').replace('#', '').replace('.', '')
+
+                    if not language.isalpha():
+                        return jsonify({
+                            "error": "Language must be alphabets only"}), 400
+
+                    language = language.lower()
+
+                    if language not in accepted_languages:
+                        return jsonify({
+                            "error": "Language not supported"}), 400
+
+                    snippet.language = language
+
                 snippet.updated_at = datetime.now()
 
                 storage.save()
@@ -329,9 +438,10 @@ def update_user_snippet():
                     "message": "Snippet updated successfully",
                     "snippet_id": snippet.snippet_id,
                     "title": snippet.title,
-                    "code": snippet.code,
                     "description": snippet.description,
-                    "updated_at": snippet.updated_at.isoformat()
+                    "language": snippet.language,
+                    "code": snippet.code,
+                    "updated_at": format_datetime(snippet.updated_at)
                     }), 200
             else:
                 return jsonify({"error": "Not logged in"}), 404

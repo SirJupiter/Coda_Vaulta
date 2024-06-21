@@ -21,11 +21,44 @@
       href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="assets/styles/styles.css" type="text/css" />
     <link rel="stylesheet" href="assets/styles/overlay.css" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="assets/styles/snippet-cards.css"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="assets/styles/prism.css" />
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.0.0-rc.5/html2canvas.min.js"></script> -->
+    <!-- Include Prism.js CSS for styling -->
+    <!-- <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism-coy.min.css"
+      rel="stylesheet"
+    /> -->
+    <!-- Include Prism.js library -->
+    <!-- <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.min.js"
+    ></script> -->
     <script defer src="assets/scripts/init.js"></script>
     <script defer src="assets/scripts/downloadScript.js"></script>
+    <script defer src="assets/scripts/prism.js"></script>
+    <!-- <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"
+    ></script> -->
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"
+    ></script>
     <title>Coda Vaulta | Home</title>
   </head>
   <body>
@@ -55,8 +88,82 @@
             </p>
             <button class="btn">Explore</button>
           </div>
+
+          <!-- Single Snippet display board for when a user clicks on a snippet -->
+          <div class="snippet-display-board">
+            <div class="snippet-display">
+              <div class="snippet-display-header">
+                <h5>Snippet Title</h5>
+              </div>
+              <div class="snippet-display-body">
+                <p class="snippet-desc">Snippet Description</p>
+                <p class="snippet-language .inconsolata-language">
+                  Snippet Language
+                </p>
+                <pre><code></code></pre>
+              </div>
+              <div class="snippet-display-footer">
+                <div class="code-toolbar">
+                  <div class="toolbar">
+                    <div class="toolbar-item">
+                      <button class="btn edit">Edit</button>
+                    </div>
+                    <div class="toolbar-item">
+                      <button class="btn delete">Delete</button>
+                    </div>
+                    <div class="toolbar-item">
+                      <button class="btn download">Download</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="header-icon">
             <i class="fa-sharp fa-regular fa-folder fa-10x"></i>
+          </div>
+
+          <!-- Form for creating snippet -->
+          <div class="create-snippet-form">
+            <form id="snippetForm">
+              <div class="input-bx">
+                <input
+                  type="text"
+                  name="title"
+                  placeholder="Snippet Title"
+                  required
+                />
+              </div>
+              <div class="input-bx">
+                <textarea
+                  name="description"
+                  placeholder="Snippet Description"
+                  maxlength="60"
+                  cols="25"
+                ></textarea>
+              </div>
+              <div class="input-bx">
+                <input
+                  type="text"
+                  name="language"
+                  placeholder="Code Language"
+                  required
+                />
+              </div>
+              <div class="input-bx">
+                <textarea
+                  name="code"
+                  placeholder="Enter your code snippet here"
+                  required
+                  rows="5"
+                  cols="25"
+                ></textarea>
+              </div>
+              <div class="input-bx">
+                <input type="submit" value="Create Snippet" />
+              </div>
+            </form>
           </div>
         </header>
       </div>
@@ -157,14 +264,17 @@
             </div>
             <div class="input-box">
               <input
-				class="password1"
+                class="password1"
                 type="password"
                 placeholder="Password"
                 name="password"
                 autocomplete="on"
                 required
               />
-			  <i class="toggle-password1 fa-sharp fa-solid fa-eye" aria-hidden="true"></i>
+              <i
+                class="toggle-password1 fa-sharp fa-solid fa-eye"
+                aria-hidden="true"
+              ></i>
             </div>
             <div class="input-box">
               <button type="submit">Sign Up</button>
@@ -197,14 +307,17 @@
             </div>
             <div class="in-input-box">
               <input
-				class="password2"
+                class="password2"
                 type="password"
                 placeholder="Password"
                 name="password"
                 autocomplete="on"
                 required
               />
-			  <i class="toggle-password2 fa-sharp fa-solid fa-eye" aria-hidden="true"></i>
+              <i
+                class="toggle-password2 fa-sharp fa-solid fa-eye"
+                aria-hidden="true"
+              ></i>
             </div>
             <div class="in-input-box">
               <button type="submit">Sign In</button>
