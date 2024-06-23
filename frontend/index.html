@@ -36,29 +36,15 @@
       href="assets/styles/snippet-cards.css"
       type="text/css"
     />
+    <link rel="stylesheet" href="assets/styles/del-modal.css" type="text/css" />
     <link rel="stylesheet" href="assets/styles/prism.css" />
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.0.0-rc.5/html2canvas.min.js"></script> -->
-    <!-- Include Prism.js CSS for styling -->
-    <!-- <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism-coy.min.css"
-      rel="stylesheet"
-    /> -->
-    <!-- Include Prism.js library -->
-    <!-- <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/prism.min.js"
-    ></script> -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
     <script defer src="assets/scripts/init.js"></script>
     <script defer src="assets/scripts/downloadScript.js"></script>
     <script defer src="assets/scripts/prism.js"></script>
-    <!-- <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"
-    ></script> -->
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"
-    ></script>
     <title>Coda Vaulta | Home</title>
   </head>
   <body>
@@ -239,7 +225,7 @@
     </footer>
 
     <!-- Overlay for signup -->
-    <div id="register-overlay" style="display: none">
+    <div id="register-overlay">
       <div class="drop">
         <div class="content">
           <form id="registerForm">
@@ -291,7 +277,7 @@
     </div>
 
     <!-- Overlay for sign in -->
-    <div id="sign-in-overlay" style="display: none">
+    <div id="sign-in-overlay">
       <div class="in-drop">
         <div class="in-content">
           <form id="signInForm">
@@ -323,6 +309,26 @@
               <button type="submit">Sign In</button>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Snippet delete confirmation -->
+    <div class="modalcontainer">
+      <div class="flex">
+        <div class="modal">
+          <div class="close"><span>&#43;</span></div>
+          <div class="content">
+            <h3>Delete snippet</h3>
+            <p>
+              Are you sure you want to delete this snippet? Snippets deleted
+              cannot be retrieved anymore after deletion. Please confirm.
+            </p>
+          </div>
+          <div class="buttons">
+            <a href="javascript:void(0);">Cancel</a>
+            <a href="javascript:void(0);">Delete</a>
+          </div>
         </div>
       </div>
     </div>

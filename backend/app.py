@@ -48,6 +48,31 @@ def teardown(exc):
     storage.close()
 
 
+@api.route('/protected', methods=['GET'], strict_slashes=False)
+@jwt_required()
+def protected():
+    """
+    A protected endpoint that requires a valid JWT token.
+    Returns the email of the logged-in user.
+    If this endpoint is reached, it means the token is valid
+    """
+    user_id = get_jwt_identity()
+    user = storage.get_user_by_user_id(user_id)
+    return jsonify(logged_in_as=user.email), 200
+
+
+# Custom response for expired tokens
+@jwt.expired_token_loader
+def my_expired_token_callback(jwt_header, jwt_payload):
+    return jsonify(code=401, msg="Token has expired"), 401
+
+
+# Custom response for invalid tokens
+@jwt.invalid_token_loader
+def my_invalid_token_callback(error_string):
+    return jsonify(code=422, msg="Invalid Token"), 422
+
+
 @api.route('/user/register', methods=['POST'], strict_slashes=False)
 def register_user():
     """
@@ -192,18 +217,6 @@ def delete_user():
             return jsonify({"error": "User not found"}), 404
     except Exception as e:
         return jsonify({"error": e}), 400
-
-
-@api.route('/protected', methods=['GET'], strict_slashes=False)
-@jwt_required()
-def protected():
-    """
-    A protected endpoint that requires a valid JWT token.
-    Returns the email of the logged-in user.
-    """
-    user_id = get_jwt_identity()
-    user = storage.get_user_by_user_id(user_id)
-    return jsonify(logged_in_as=user.email), 200
 
 
 @api.route('/users', methods=['GET'], strict_slashes=False)

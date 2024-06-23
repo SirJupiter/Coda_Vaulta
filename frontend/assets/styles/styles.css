@@ -50,67 +50,6 @@ body {
   display: none;
 }
 
-/* .card-container {
-  display: flex;
-  overflow-x: scroll;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-
-.card-container::-webkit-scrollbar {
-  display: none;
-}
-
-.card {
-  flex: none;
-  background: #191c29;
-  width: 100px;
-  height: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--light-color);
-  scroll-snap-align: start;
-  cursor: pointer;
-}
-
-.card:hover {
-  color: rgb(88, 199, 250 / 100%);
-  transition: color 1s;
-}
-
-.card:hover::before,
-.card:hover::after {
-  opacity: 0;
-}
-
-.card::before {
-  content: '';
-  width: 104%;
-  height: 102%;
-  border-radius: 8px;
-  background-image: linear-gradient(#eca644, #e33ce0 43%, #c20054);
-  z-index: -1;
-  top: -1%;
-  left: -2%;
-}
-
-.card::after {
-  content: '';
-  left: 0;
-  right: 0;
-  z-index: -1;
-  height: 100%;
-  width: 100%;
-  margin: 0 auto;
-  background-image: linear-gradient(#eca644, #e33ce0 43%, #c20054);
-  opacity: 1;
-  transition: opacity 0.5s;
-} */
-
 /* INDEX.HTML */
 #container-a {
   /* height: 60vh; */
@@ -180,7 +119,6 @@ body {
   text-decoration: none;
   color: var(--light-color);
   font-size: 18px;
-  /* font-weight: lighter; */
 }
 
 #container-a nav #nav ul li a:hover {
@@ -199,7 +137,6 @@ body {
 #container-a header .header-board {
   flex: 1;
   max-width: 40%;
-  /* flex-grow: 1; */
 }
 
 #container-a header .snippet-display-board {
@@ -216,8 +153,6 @@ body {
 
 #container-a header .snippet-display-board .snippet-display {
   display: none;
-  /* align-items: center; */
-  /* justify-content: space-between; */
   padding: 2rem 3rem;
   background-color: #191c29;
   border-radius: 30px;
@@ -242,11 +177,9 @@ body {
 
 #container-a header .snippet-display-board .snippet-display .snippet-language {
   font-size: 16px;
-  /* padding-top: 1.5rem; */
   font-weight: lighter;
-  margin-top: 1rem;
+  margin-top: 0.8em;
   font-style: italic;
-  /* margin-bottom: 3.5rem; */
 }
 
 .inconsolata-language {
@@ -268,7 +201,6 @@ body {
 #container-a header .header-board h4 {
   font-size: 52px;
   line-height: 1.3;
-  /* flex-grow: 1; */
 }
 
 #container-a header .header-board p {

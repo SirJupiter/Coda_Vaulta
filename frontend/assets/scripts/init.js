@@ -110,54 +110,84 @@ class App {
   }
 
   checkIfLoggedIn() {
-    if (!this.isEmptyLocalStorage() && !this.isLoggedIn()) {
+    if (!this.isEmptyLocalStorage() || !this.isLoggedIn()) {
       const username = localStorage.getItem('username');
       const authToken = localStorage.getItem('authToken');
       if (username && authToken) {
         this.username = username;
         this.authToken = authToken;
-        const welcome = document.createElement('div');
-        welcome.textContent = `Welcome,  ${this.username} 😎🎉`;
-        Object.assign(welcome.style, {
-          color: 'white',
-          fontSize: '1.5rem',
-          marginTop: '0.7rem',
-          letterSpacing: '6px',
-          textAlign: 'right',
-        });
 
-        document.querySelector('nav').after(welcome);
-        document.querySelector('.sign-in').textContent = 'Logout';
-        document.querySelector('.register').style.display = 'none';
+        this.checkTokenValidity()
+          .then((data) => {
+            console.log('Success:', data);
+            if (this.isLoggedIn()) {
+              const welcome = document.createElement('div');
+              welcome.textContent = `Welcome,  ${this.username} 😎🎉`;
+              Object.assign(welcome.style, {
+                color: 'white',
+                fontSize: '1.5rem',
+                marginTop: '0.7rem',
+                letterSpacing: '6px',
+                textAlign: 'right',
+              });
 
-        this.showSnippetDisplayBoard();
-        this.displaySnippets();
-        this.showCreateSnippetForm();
+              document.querySelector('nav').after(welcome);
+              document.querySelector('.sign-in').textContent = 'Logout';
+              document.querySelector('.register').style.display = 'none';
+
+              this.showSnippetDisplayBoard();
+              this.displaySnippets();
+              this.showCreateSnippetForm();
+            }
+          })
+          .catch((error) => {
+            console.error('Token validation error:', error);
+            localStorage.removeItem('username');
+            localStorage.removeItem('authToken');
+            window.location.href = '/frontend/index.html';
+            // document.querySelector('.sign-in').textContent = 'Sign In';
+            // document.querySelector('.register').style.display = 'inline-block';
+            // document.querySelector('nav').nextElementSibling.remove();
+          });
       }
+    }
+  }
+
+  async checkTokenValidity() {
+    const response = await this.fetchWithAuth('protected', { method: 'GET' });
+
+    const responseData = await response.json();
+
+    if (response.ok) {
+      return responseData;
+    } else {
+      throw new Error(responseData.msg || 'Token expired or invalid');
     }
   }
 
   showRegisterOverlay() {
     this.registerOverlay.style.display = 'flex';
+    // $('.register-overlay,.drop').fadeIn("slow");
 
     document.querySelector('.success').style.display = 'none';
     document.querySelector('.drop').style.display = 'flex';
   }
 
   showSignInOverlay() {
+    // $('.sign-in-overlay,.in-drop').fadeIn("slow");
     this.signInOverlay.style.display = 'flex';
-    // this.registerOverlay.style.display = 'none';
     const inDropElement = document.querySelector('.in-drop');
-    console.log('in-drop element:', inDropElement); // Verify the element is selected correctly
     inDropElement.style.display = 'flex';
   }
 
   hideRegisterOverlay() {
     this.registerOverlay.style.display = 'none';
+    // $('.register-overlay, .drop').fadeOut("slow");
   }
 
   hideSignInOverlay() {
     this.signInOverlay.style.display = 'none';
+    // $('.sign-in-overlay, .in-drop').fadeOut("slow");
   }
 
   handleSubmit(event) {
@@ -384,56 +414,70 @@ class App {
     editBtn.onclick = () => {};
 
     const deleteBtn = document.querySelector('.delete');
-    deleteBtn.onclick = () => {
-      this.deleteSnippet(snippet)
-        .then((data) => {
-          console.log(data);
-          const deleteMessage = document.createElement('h4');
-          deleteMessage.textContent = data.message;
 
-          Object.assign(deleteMessage.style, {
-            color: 'green',
-            fontWeight: 'normal',
-            fontSize: '16px',
-            paddingTop: '10px',
-          });
-
-          this.snippetDisplay.style.display = 'none';
-          this.snippetDisplayBoard.style.display = 'none';
-          this.snippetDisplayBoard.parentNode.insertBefore(
-            deleteMessage,
-            this.snippetDisplayBoard.parentNode.firstChild
-          );
-
-          this.displaySnippets();
-
-          setTimeout(() => {
-            deleteMessage.remove();
-            this.snippetDisplayBoard.style.display = 'block';
-          }, 3000);
-        })
-
-        .catch((error) => {
-          console.error(error.message);
-
-          const errorMessage = document.createElement('h4');
-          errorMessage.textContent = error.message;
-          errorMessage.style.color = 'red';
-          errorMessage.style.fontWeight = 'normal';
-          errorMessage.style.marginTop = '1rem';
-          errorMessage.style.fontSize = '16px';
-
-          this.snippetDisplay.insertAdjacentElement('afterend', errorMessage);
-
-          setTimeout(() => {
-            errorMessage.remove();
-          }, 3000);
-        });
-    };
+    deleteBtn.addEventListener('click', () => {
+      this.showDeleteSnippetConfirmationModal(snippet);
+    });
 
     // Append the snippet container to the snippet board
     this.snippetDisplay.style.display = 'block';
     this.snippetDisplayBoard.style.display = 'block';
+  }
+
+  showDeleteSnippetConfirmationModal(snippet) {
+    $('.modalcontainer,.modal').fadeIn('slow');
+
+    $('.close,.buttons a:first-child').click(function () {
+      $('.modalcontainer,.modal').fadeOut('slow');
+    });
+
+    const yesButton = document.querySelector('.buttons a:last-child');
+    const noButton = document.querySelector('.buttons a:first-child');
+
+    // Remove existing event listeners to prevent duplication
+    yesButton.removeEventListener('click', this.yesButtonHandler);
+
+    // Create a new handler function that can be removed later
+    this.yesButtonHandler = (event) => {
+      this.deleteSnippet(snippet)
+        .then((data) => {
+          console.log(data);
+          $('.modalcontainer,.modal').fadeOut('slow');
+          this.snippetDisplay.style.display = 'none';
+          this.displaySnippets();
+        })
+        .catch((error) => {
+          console.error(error.message);
+          document.querySelector('.modalcontainer p').textContent =
+            'Oops! Something went wrong';
+          document.querySelector('.modalcontainer p').style.color = 'red';
+          document.querySelector('.modalcontainer .buttons').style.display =
+            'none';
+          document.querySelector('.modalcontainer h3').style.display = 'none';
+
+          setTimeout(() => {
+            $('.modalcontainer,.modal').fadeOut('slow');
+          }, 3000);
+
+          document.querySelector('.modalcontainer p').textContent =
+            'Are you sure you want to delete this snippet? Snippets delete cannot be retrieved anymore after deletion. Please confirm.';
+          document.querySelector('.modalcontainer p').style.color =
+            'var(--medium-dark)';
+          document.querySelector('.modalcontainer .buttons').style.display =
+            'block';
+          document.querySelector('.modalcontainer h3').style.display = 'block';
+        });
+    };
+
+    // Attach the new event listener
+    yesButton.addEventListener('click', this.yesButtonHandler);
+
+    // Close popup when clicking the esc keyboard button
+    document.addEventListener('keyup', function (event) {
+      if (event.key === 'Escape') {
+        $('.modalcontainer,.modal').fadeOut('slow');
+      }
+    });
   }
 
   downloadSnippetAsImage(code, filename) {
@@ -484,7 +528,6 @@ class App {
 
     const data = await response.json();
     if (response.ok) {
-      console.log(data);
       return data;
     } else {
       throw new Error(data.error || 'Failed to fetch snippets');
@@ -503,7 +546,6 @@ class App {
 
     const data = await response.json();
     if (response.ok) {
-      console.log(data);
       return data;
     } else {
       throw new Error(data.error || 'Failed to create snippet');
@@ -519,7 +561,6 @@ class App {
 
     const responseData = await response.json();
     if (response.ok) {
-      console.log(responseData);
       return responseData;
     } else {
       throw new Error(responseData.error || 'Failed to update snippet');
