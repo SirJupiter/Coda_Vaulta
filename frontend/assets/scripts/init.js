@@ -232,7 +232,7 @@ class App {
       .catch((error) => {
         console.error('Error:', error.message);
         // Handle errors here
-        const errorMessage = document.createElement('h4');
+        const errorMessage = document.createElement('p');
         errorMessage.textContent = error.message;
         errorMessage.style.color = 'red';
         this.registerForm
@@ -302,7 +302,7 @@ class App {
       .catch((error) => {
         console.error('Error:', error.message);
 
-        const errorMessage = document.createElement('h4');
+        const errorMessage = document.createElement('p');
         errorMessage.textContent = error.message;
         errorMessage.style.color = 'red';
         this.signInForm
@@ -367,11 +367,9 @@ class App {
       .catch((error) => {
         console.error(error.message);
 
-        const errorMessage = document.createElement('h4');
+        const errorMessage = document.createElement('p');
         errorMessage.textContent = error.message;
         errorMessage.style.color = 'red';
-        errorMessage.style.fontWeight = 'normal';
-        errorMessage.style.fontSize = '16px';
         this.snippetForm
           .querySelector('#snippetForm .input-bx:last-child')
           .before(errorMessage);
@@ -697,7 +695,7 @@ class App {
     const errorMessage = document.createElement('h5');
     errorMessage.textContent = message;
     errorMessage.style.color = 'white';
-    errorMessage.style.fontWeight = 'normal';
+    errorMessage.style.fontWeight = 'lighter';
     this.snippetSection.appendChild(errorMessage);
 
     Object.assign(this.snippetSection.style, {
