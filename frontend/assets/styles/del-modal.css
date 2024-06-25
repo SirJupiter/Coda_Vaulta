@@ -1,4 +1,5 @@
-.modalcontainer {
+.modalcontainer,
+.updatecontainer {
   display: none;
   position: fixed;
   top: 0;
@@ -14,13 +15,15 @@
   backdrop-filter: blur(6px);
 }
 
-.modalcontainer .content > h3 {
+.modalcontainer .content > h3,
+.updatecontainer .content > h3 {
   margin-top: 0px;
   color: var(--dark-color);
   font-weight: 400;
 }
 
-.modalcontainer .content > p {
+.modalcontainer .content > p,
+.updatecontainer .content > p {
   color: var(--medium-dark);
   font-size: 16px;
   line-height: 24px;
@@ -77,6 +80,97 @@
     height: 50px;
     background-color: #fff;
     a {
+      width: 50%;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      float: left;
+      background-color: #eee;
+      color: #4d5c6e;
+      transition: 0.3s;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-weight: bold;
+      &:hover {
+        background-color: var(--deeper-secondary-color);
+        transition: all 0.2s;
+        color: var(--light-color);
+      }
+      &:nth-of-type(2) {
+        float: right;
+        color: #fff;
+        background-color: var(--secondary-color);
+        &:hover {
+          background-color: var(--deeper-secondary-color);
+        }
+      }
+    }
+  }
+}
+
+.updatemodal {
+  display: none;
+  position: relative;
+  width: 600px;
+  /* height: 330px; */
+  background-color: #fff;
+  &.active {
+    display: block;
+  }
+
+  .content {
+    padding: 30px;
+  }
+  .close {
+    cursor: pointer;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    position: absolute;
+    right: 0;
+    color: #999;
+    font-size: 40px;
+    span {
+      transform: rotate(45deg);
+      display: block;
+    }
+  }
+
+  p {
+	margin-bottom: 2rem;
+  }
+
+  .input-bx {
+	margin-bottom: 1rem;
+
+	input, textarea {
+		width: 100%;
+		background-color: var(--light-color);
+		outline: none;
+		border: 1px solid var(--medium-dark);
+		color: var(--dark-color);
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+
+	input {
+		height: 40px;
+	}
+  }
+
+  .input-bx:last-child {
+	margin-bottom: 4rem;
+  }
+
+  .update-buttons {
+    width: 600px;
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    background-color: #fff;
+    button {
       width: 50%;
       height: 50px;
       line-height: 50px;

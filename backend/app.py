@@ -421,13 +421,17 @@ def update_user_snippet():
 
         if snippet:
             if snippet.user_id == user.user_id:
-                if 'title' in data_received:
-                    snippet.title = data_received.get('title')
-                if 'code' in data_received:
-                    snippet.code = data_received.get('code')
-                if 'description' in data_received:
-                    snippet.description = data_received.get('description')
-                if 'language' in data_received:
+                for attribute in ['title', 'code', 'description']:
+                    if attribute in data_received and data_received.get(
+                                attribute) is not None:
+                        setattr(snippet, attribute, data_received.get(
+                            attribute))
+
+                if 'language' in data_received and len(
+                        data_received.get('language')) != 0:
+                    if len(data_received.get('code')) == 0:
+                        return jsonify({
+                            "error": "Cannot update language unless code is provided"}), 400
                     language = data_received.get('language').replace(
                         ' ', '').replace('#', '').replace('.', '')
 

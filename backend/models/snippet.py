@@ -4,7 +4,7 @@
 from datetime import datetime
 from uuid import uuid4
 from models.base import Base
-from sqlalchemy import Column, String, DateTime, ForeignKey
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey
 # from sqlalchemy.orm import relationship
 
 
@@ -17,7 +17,7 @@ class Snippet(Base):
     Instance Attributes:
         snippet_id (str): id of created snippet
         title (str): title of snippet
-        code (str): code to be formatted into snippet
+        code (text): code to be formatted into snippet
         language (str): language of code to be formatted
         description (str): description of the code
         created_at (datetime): time snippet was created
@@ -31,7 +31,7 @@ class Snippet(Base):
     title = Column(String(60), nullable=False)
     description = Column(String(60), nullable=True)
     language = Column(String(20), nullable=False)
-    code = Column(String(2048), nullable=False)
+    code = Column(Text, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.now())
     updated_at = Column(DateTime, nullable=False, default=datetime.now())
     user_id = Column(String(60), ForeignKey('users.user_id'), nullable=False)

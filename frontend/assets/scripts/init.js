@@ -17,6 +17,7 @@ class App {
     this.snippetDisplay = document.querySelector('.snippet-display');
 
     this.snippetForm = document.getElementById('snippetForm');
+    this.updateSnippetForm = document.getElementById('updateSnippetForm');
     this.username = '';
     this.authToken = '';
     this.initEvents();
@@ -372,7 +373,7 @@ class App {
         errorMessage.style.fontWeight = 'normal';
         errorMessage.style.fontSize = '16px';
         this.snippetForm
-          .querySelector('.input-bx:last-child')
+          .querySelector('#snippetForm .input-bx:last-child')
           .before(errorMessage);
 
         setTimeout(() => {
@@ -406,22 +407,97 @@ class App {
     const languageElement = document.querySelector('.snippet-language');
     languageElement.textContent = language;
 
-    const downloadBtn = document.querySelector('.download');
-    downloadBtn.onclick = () =>
-      this.downloadSnippetAsImage(code, title || 'snippet');
-
-    const editBtn = document.querySelector('.edit');
-    editBtn.onclick = () => {};
-
-    const deleteBtn = document.querySelector('.delete');
-
-    deleteBtn.addEventListener('click', () => {
-      this.showDeleteSnippetConfirmationModal(snippet);
-    });
-
     // Append the snippet container to the snippet board
     this.snippetDisplay.style.display = 'block';
     this.snippetDisplayBoard.style.display = 'block';
+    // $('.snippet-display').fadeIn('slow');
+
+    // Attach event listeners to the snippet display buttons: Edit, Update, Download
+    const downloadBtn = document.querySelector('.download');
+    const preCode = document.querySelector('.snippet-display-board pre');
+    downloadBtn.onclick = () =>
+      this.downloadSnippetAsImage(preCode, title || 'snippet');
+
+    const editBtn = document.querySelector('.edit');
+    editBtn.addEventListener('click', () => {
+      this.showUpdateSnippetFormModal(snippet);
+    });
+
+    const deleteBtn = document.querySelector('.delete');
+    deleteBtn.addEventListener('click', () => {
+      this.showDeleteSnippetConfirmationModal(snippet);
+    });
+  }
+
+  showUpdateSnippetFormModal(snippet) {
+    $('.updatecontainer,.updatemodal').fadeIn('slow');
+
+    // Remove existing event listener to prevent duplication
+    this.updateSnippetForm.removeEventListener(
+      'submit',
+      this.updateSnippetFormSubmitHandler
+    );
+
+    // Directly assign the handler to this, ensuring it's bound to the current context
+    this.updateSnippetFormSubmitHandler = (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(this.updateSnippetForm);
+      const updatedSnippet = {
+        title: formData.get('title'),
+        description: formData.get('description'),
+        language: formData.get('language'),
+        code: formData.get('code'),
+        snippet_id: snippet.snippet_id,
+      };
+
+      this.updateSnippet(updatedSnippet)
+        .then((data) => {
+          console.log(data);
+          $('.updatecontainer, .updatemodal').fadeOut('slow');
+          this.displaySnippets();
+          this.renderSnippetOnSnippetBoard(updatedSnippet);
+
+          this.updateSnippetForm.reset();
+        })
+        .catch((error) => {
+          console.error('Error:', error.message);
+          const errorMessage = document.createElement('p');
+          errorMessage.textContent = error.message;
+          errorMessage.style.fontSize = '15px';
+          errorMessage.style.color = 'red';
+          // errorMessage.style.margin = '0 auto';
+          // errorMessage.style.width = '80%';
+          errorMessage.style.textAlign = 'center';
+
+          document
+            .querySelector('#updateSnippetForm .content')
+            .appendChild(errorMessage);
+
+          setTimeout(() => {
+            errorMessage.remove();
+          }, 3000);
+        });
+    };
+
+    // Attach the new event listener
+    this.updateSnippetForm.addEventListener(
+      'submit',
+      this.updateSnippetFormSubmitHandler
+    );
+
+    $('.updatecontainer .close,.update-buttons button:first-child').click(
+      function () {
+        $('.updatecontainer,.updatemodal').fadeOut('slow');
+      }
+    );
+
+    // Close popup when clicking the esc keyboard button
+    document.addEventListener('keyup', function (event) {
+      if (event.key === 'Escape') {
+        $('.updatecontainer,.updatemodal').fadeOut('slow');
+      }
+    });
   }
 
   showDeleteSnippetConfirmationModal(snippet) {
@@ -432,7 +508,6 @@ class App {
     });
 
     const yesButton = document.querySelector('.buttons a:last-child');
-    const noButton = document.querySelector('.buttons a:first-child');
 
     // Remove existing event listeners to prevent duplication
     yesButton.removeEventListener('click', this.yesButtonHandler);
@@ -480,39 +555,47 @@ class App {
     });
   }
 
-  downloadSnippetAsImage(code, filename) {
-    // Create a canvas element
-    const canvas = document.createElement('canvas');
-    canvas.width = 800;
-    canvas.height = 600;
-    const ctx = canvas.getContext('2d');
+  downloadSnippetAsImage(element, filename) {
+    const originalStyles = {
+      width: element.style.width,
+      height: element.style.height,
+      overflow: element.style.overflow,
+    };
+    element.style.width = `${element.scrollWidth}px`;
+    element.style.height = `${element.scrollHeight}px`;
+    element.style.overflow = 'visible';
 
-    // Set canvas background (optional)
-    ctx.fillStyle = '#fff'; // White background
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const snippetDisplayBoard = document.querySelector(
+      '#container-a header .snippet-display-board'
+    );
+    // const originalBackgroundClip = snippetDisplayBoard.style.backgroundClip; // Store original value
+    const originalMaxWidth = snippetDisplayBoard.style.maxWidth;
+    const originalHeight = snippetDisplayBoard.style.height;
+    snippetDisplayBoard.style.maxWidth = '100%';
+    snippetDisplayBoard.style.height = '100%';
+    snippetDisplayBoard.style.paddingRight = '20px';
 
-    // Prepare text
-    ctx.fillStyle = '#000';
-    ctx.font = '16px monospace';
-    const lines = code.split('\n');
-    let startY = 20; // Start position for the text
+    html2canvas(snippetDisplayBoard).then((canvas) => {
+      // Convert canvas to JPEG URL
+      const imageURL = canvas.toDataURL('image/jpeg');
 
-    // Draw text onto canvas
-    lines.forEach((line) => {
-      ctx.fillText(line, 10, startY); // Adjust positioning as needed
-      startY += 20; // Line height
+      // Trigger download
+      const link = document.createElement('a');
+      link.href = imageURL;
+      link.download = `${filename}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Restore original style
+      element.style.width = originalStyles.width;
+      element.style.height = originalStyles.height;
+      element.style.overflow = originalStyles.overflow;
+
+      snippetDisplayBoard.style.maxWidth = originalMaxWidth;
+      snippetDisplayBoard.style.height = originalHeight;
+      snippetDisplayBoard.style.paddingRight = '3px';
     });
-
-    // Convert canvas to JPEG URL
-    const imageURL = canvas.toDataURL('image/jpeg');
-
-    // Trigger download
-    const link = document.createElement('a');
-    link.href = imageURL;
-    link.download = `${filename}.jpg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   }
 
   isLoggedIn() {
