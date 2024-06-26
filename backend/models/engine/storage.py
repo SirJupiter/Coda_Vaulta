@@ -47,7 +47,8 @@ class Storage:
         """Saves storage objects to database"""
         self.__session.commit()
 
-    def update_snippet(self, snippet_id, title=None, code=None, desc=None):
+    def update_snippet(self, snippet_id, title=None,
+                       code=None, desc=None, lang=None):
         """Updates snippet object in storage"""
         snippet = self.get_snippet_by_snippet_id(snippet_id)
         if snippet:
@@ -57,6 +58,8 @@ class Storage:
                 snippet.code = code
             if desc is not None:
                 snippet.description = desc
+            if lang is not None:
+                snippet.language = lang
             self.save()
             return snippet
 

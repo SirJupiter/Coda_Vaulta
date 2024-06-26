@@ -65,18 +65,20 @@ class CODAVAULTAConsole(cmd.Cmd):
                 new_instance = User(username, email, password)
 
             elif args[0] == 'Snippet':
-                if len(args) < 5:
-                    print("** title, code, or user id is missing **")
+                if len(args) < 6:
+                    print("** title, code, language or user id is missing **")
                     return False
 
-                title, code, desc, user_id = args[1], args[2], args[3], args[4]
+                title, code, desc, user_id = args[1], args[2], args[3], args[5]
+                language = args[4]
+                title = title.replace('-', ' ')
                 code, desc = code.replace('-', ' '), desc.replace('-', ' ')
 
                 user = models.storage.get_user_by_user_id(user_id)
                 if not user:
                     print("** user doesn't exist **")
                     return False
-                new_instance = Snippet(title, code, desc, user_id)
+                new_instance = Snippet(title, code, desc, language, user_id)
             else:
                 print("** class doesn't exist **")
                 return False
@@ -144,14 +146,16 @@ class CODAVAULTAConsole(cmd.Cmd):
             if len(args) > 1:
                 if len(args) < 5:
                     print("** snippet_id, title, code, "
-                          "or description is missing **")
+                          "description, or language is missing **")
                     return False
 
-                snip_id, title, code, desc = args[1], args[2], args[3], args[4]
+                snip_id, title, code, desc = args[1], args[2], args[3], args[5]
+                title = title.replace('-', ' ')
                 code, desc = code.replace('-', ' '), desc.replace('-', ' ')
+                lang = args[4]
 
                 snippet = models.storage.update_snippet(
-                    snip_id, title, code, desc)
+                    snip_id, title, code, desc, lang)
                 if not snippet:
                     print("** no instance found **")
                 else:
@@ -160,23 +164,6 @@ class CODAVAULTAConsole(cmd.Cmd):
                 print("** instance id missing **")
         else:
             print("** class doesn't exist **")
-
-    # def do_all(self, arg):
-    #     """Prints string representations of instances"""
-    #     args = shlex.split(arg)
-    #     obj_list = []
-    #     if len(args) == 0:
-    #         obj_dict = models.storage.all()
-    #     elif args[0] in classes:
-    #         obj_dict = models.storage.all(classes[args[0]])
-    #     else:
-    #         print("** class doesn't exist **")
-    #         return False
-    #     for key in obj_dict:
-    #         obj_list.append(str(obj_dict[key]))
-    #     print("[", end="")
-    #     print(", ".join(obj_list), end="")
-    #     print("]")
 
 
 if __name__ == '__main__':

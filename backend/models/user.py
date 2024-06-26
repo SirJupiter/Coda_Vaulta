@@ -29,8 +29,9 @@ class User(Base):
     username = Column(String(60), unique=True, nullable=False)
     email = Column(String(60), unique=True, nullable=False)
     hashed_password = Column(String(60), nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.now())
-    updated_at = Column(DateTime, nullable=False, default=datetime.now())
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    updated_at = Column(DateTime, nullable=False,
+                        default=datetime.now, onupdate=datetime.now)
     snippets = relationship('Snippet', backref='users',
                             cascade='all, delete-orphan')
 
@@ -60,14 +61,14 @@ class User(Base):
 
     def save(self):
         """Saves user object to database"""
-        from models.engine.storage import storage
-        storage.new(self)
-        storage.save()
+        import models
+        models.storage.new(self)
+        models.storage.save()
 
     def delete(self):
         """Deletes user object from database"""
-        from models.engine.storage import storage
-        storage.delete(self)
+        import models
+        models.storage.delete(self)
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of the instance"""

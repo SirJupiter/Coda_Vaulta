@@ -32,8 +32,9 @@ class Snippet(Base):
     description = Column(String(60), nullable=True)
     language = Column(String(20), nullable=False)
     code = Column(Text, nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.now())
-    updated_at = Column(DateTime, nullable=False, default=datetime.now())
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    updated_at = Column(
+        DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
     user_id = Column(String(60), ForeignKey('users.user_id'), nullable=False)
 
     number_of_snippets = 0

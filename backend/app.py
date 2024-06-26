@@ -431,7 +431,8 @@ def update_user_snippet():
                         data_received.get('language')) != 0:
                     if len(data_received.get('code')) == 0:
                         return jsonify({
-                            "error": "Cannot update language unless code is provided"}), 400
+                            "error": "Cannot update language unless \
+                                code is provided"}), 400
                     language = data_received.get('language').replace(
                         ' ', '').replace('#', '').replace('.', '')
 
