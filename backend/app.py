@@ -422,8 +422,8 @@ def update_user_snippet():
         if snippet:
             if snippet.user_id == user.user_id:
                 for attribute in ['title', 'code', 'description']:
-                    if attribute in data_received and data_received.get(
-                                attribute) is not None:
+                    if attribute in data_received and len(data_received.get(
+                                attribute)) != 0:
                         setattr(snippet, attribute, data_received.get(
                             attribute))
 
