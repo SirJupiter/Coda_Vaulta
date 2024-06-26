@@ -31,6 +31,8 @@ class App {
     // Check if user is already logged in
     this.checkIfLoggedIn();
 
+    this.storeOriginalCards();
+
     // Show registerOverlay
     document.querySelector('.register').addEventListener('click', () => {
       this.showRegisterOverlay();
@@ -90,6 +92,12 @@ class App {
     this.snippetForm.addEventListener('submit', (event) => {
       this.handleSnippetCreation(event);
     });
+  }
+
+  storeOriginalCards() {
+    const cards = Array.from(document.getElementsByClassName('cards'));
+    const originalCards = [...cards];
+    this.originalCards = originalCards;
   }
 
   isEmptyLocalStorage() {
@@ -454,7 +462,7 @@ class App {
           console.log(data);
           $('.updatecontainer, .updatemodal').fadeOut('slow');
           this.displaySnippets();
-          this.renderSnippetOnSnippetBoard(updatedSnippet);
+          this.renderSnippetOnSnippetBoard(data);
 
           this.updateSnippetForm.reset();
         })
@@ -670,10 +678,6 @@ class App {
         .then((snippets) => {
           console.log(snippets);
 
-          const cards = Array.from(document.getElementsByClassName('cards'));
-          const originalCards = [...cards];
-          this.originalCards = originalCards;
-
           if (snippets.length > 0) {
             this.displaySnippetsList(snippets);
           } else {
@@ -784,10 +788,6 @@ class App {
       this.snippetSection.appendChild(card);
     });
 
-    // this.cardContainer.remove();
-    // while (this.snippetSection.lastChild) {
-    //   this.snippetSection.lastChild.style.display = 'flex';
-    // }
     Object.assign(this.snippetSection.style, {
       display: 'grid',
       textAlign: 'unset',
