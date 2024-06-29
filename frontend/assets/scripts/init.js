@@ -1,7 +1,7 @@
 // const { options } = require('request');
 
 class App {
-  static #baseUrl = 'http://127.0.0.1:5000/api/';
+  static #baseUrl = 'https://127.0.0.1:5000/coda_vaulta/api/';
 
   constructor() {
     this.registerOverlay = document.getElementById('register-overlay');

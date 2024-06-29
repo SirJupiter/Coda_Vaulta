@@ -505,7 +505,7 @@ def delete_user_snippet():
 
 
 # Blueprint registration
-app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(api, url_prefix='/coda_vaulta/api')
 
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)
