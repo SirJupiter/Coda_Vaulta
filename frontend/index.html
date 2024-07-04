@@ -30,6 +30,11 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="assets/styles/styles.css" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="assets/styles/responsive.css"
+      type="text/css"
+    />
     <link rel="stylesheet" href="assets/styles/overlay.css" type="text/css" />
     <link
       rel="stylesheet"
@@ -38,7 +43,7 @@
     />
     <link rel="stylesheet" href="assets/styles/del-modal.css" type="text/css" />
     <link rel="stylesheet" href="assets/styles/prism.css" />
-	<link rel="icon" type="image/x-icon" href="cd.ico">
+    <link rel="icon" type="image/x-icon" href="cd.ico" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -53,7 +58,9 @@
     <div id="container-a">
       <div id="inner-container">
         <nav>
-          <div class="logo"><img src="assets/images/CodaVaulta.png" alt="">CodaVaulta</div>
+          <div class="logo">
+            <img src="assets/images/CodaVaulta.png" alt="" />CodaVaulta
+          </div>
           <div id="nav">
             <ul>
               <li><a href="index.html">Home</a></li>
@@ -67,6 +74,9 @@
             <button class="btn sign-in">Sign In</button>
           </div>
         </nav>
+
+        <!-- Text for showing welcome when a user is logged in -->
+        <div class="welcome-text"></div>
 
         <header>
           <div class="header-board">
@@ -184,6 +194,16 @@
           </div>
           <i class="fa-sharp fa-solid fa-laptop fa-6x"></i>
         </div>
+      </section>
+
+      <!-- Snippet section when user has logged in -->
+      <section id="snippetScroll">
+        <div class="card-container snaps-inline"></div>
+      </section>
+
+      <!-- Snippet section with no snippet display message -->
+      <section id="noSnippets">
+        <h5></h5>
       </section>
     </div>
     <footer id="container-c">

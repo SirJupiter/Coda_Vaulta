@@ -1,7 +1,7 @@
 // const { options } = require('request');
 
 class App {
-  static #baseUrl = 'https://127.0.0.1:5000/coda_vaulta/api/';
+  static #baseUrl = 'http://127.0.0.1:5000/coda_vaulta/api/';
 
   constructor() {
     this.registerOverlay = document.getElementById('register-overlay');
@@ -10,8 +10,10 @@ class App {
     this.signInOverlay = document.getElementById('sign-in-overlay');
 
     this.snippetSection = document.querySelector('#container-b section');
+    this.snippetScroll = document.querySelector('#snippetScroll');
+    this.noSnippets = document.querySelector('#noSnippets');
     this.cardContainer = '';
-    this.originalCards = '';
+
     this.headerBoard = document.querySelector('.header-board');
     this.snippetDisplayBoard = document.querySelector('.snippet-display-board');
     this.snippetDisplay = document.querySelector('.snippet-display');
@@ -31,7 +33,7 @@ class App {
     // Check if user is already logged in
     this.checkIfLoggedIn();
 
-    this.storeOriginalCards();
+    // this.storeOriginalCards();
 
     // Show registerOverlay
     document.querySelector('.register').addEventListener('click', () => {
@@ -94,11 +96,11 @@ class App {
     });
   }
 
-  storeOriginalCards() {
-    const cards = Array.from(document.getElementsByClassName('cards'));
-    const originalCards = [...cards];
-    this.originalCards = originalCards;
-  }
+  // storeOriginalCards() {
+  //   const cards = Array.from(document.getElementsByClassName('cards'));
+  //   const originalCards = [...cards];
+  //   this.originalCards = originalCards;
+  // }
 
   isEmptyLocalStorage() {
     return (
@@ -130,17 +132,12 @@ class App {
           .then((data) => {
             console.log('Success:', data);
             if (this.isLoggedIn()) {
-              const welcome = document.createElement('div');
+              const welcome = document.querySelector(
+                '#container-a .welcome-text'
+              );
               welcome.textContent = `Welcome,  ${this.username} 😎🎉`;
-              Object.assign(welcome.style, {
-                color: 'white',
-                fontSize: '1.5rem',
-                marginTop: '0.7rem',
-                letterSpacing: '6px',
-                textAlign: 'right',
-              });
 
-              document.querySelector('nav').after(welcome);
+              welcome.style.display = 'block';
               document.querySelector('.sign-in').textContent = 'Logout';
               document.querySelector('.register').style.display = 'none';
 
@@ -154,9 +151,6 @@ class App {
             localStorage.removeItem('username');
             localStorage.removeItem('authToken');
             window.location.href = '/frontend/index.html';
-            // document.querySelector('.sign-in').textContent = 'Sign In';
-            // document.querySelector('.register').style.display = 'inline-block';
-            // document.querySelector('nav').nextElementSibling.remove();
           });
       }
     }
@@ -692,41 +686,15 @@ class App {
   }
 
   displayNoSnippetsMessage(message) {
-    // Remove all child of snippetSection
-    this.snippetSection.innerHTML = '';
+    this.snippetSection.style.display = 'none';
 
-    // Create and append error message
-    const errorMessage = document.createElement('h5');
-    errorMessage.textContent = message;
-    errorMessage.style.color = 'white';
-    errorMessage.style.fontWeight = 'lighter';
-    this.snippetSection.appendChild(errorMessage);
-
-    Object.assign(this.snippetSection.style, {
-      display: 'flex',
-      textAlign: 'center',
-      alignItems: 'center',
-      justifyContent: 'center',
-    });
+    // Append error message to h5 tag in noSnippets section
+    document.querySelector('#noSnippets h5').textContent = message;
+    this.noSnippets.style.display = 'flex';
   }
 
   displaySnippetsList(snippets) {
-    // Remove all child of snippetSection
-    // while (this.snippetSection.lastChild) {
-    //   this.snippetSection.lastChild.style.display = 'none';
-    // }
-    this.snippetSection.innerHTML = '';
-    Object.assign(this.snippetSection.style, {
-      display: 'block',
-      textAlign: 'unset',
-      alignContent: 'unset',
-      overflow: 'auto',
-      width: '90%',
-      margin: '0 auto',
-    });
-
-    const cardContainer = document.createElement('div');
-    cardContainer.classList.add('card-container', 'snaps-inline');
+    this.snippetSection.style.display = 'none';
 
     // Create and append the snippet cards
     snippets.forEach((snippet) => {
@@ -735,11 +703,10 @@ class App {
       card.addEventListener('click', () =>
         this.renderSnippetOnSnippetBoard(snippet)
       );
-      cardContainer.appendChild(card);
+      document.querySelector('.card-container').appendChild(card);
     });
 
-    this.snippetSection.appendChild(cardContainer);
-    // this.cardContainer = cardContainer;
+    this.snippetScroll.style.display = 'block';
   }
 
   createSnippetCard(snippet) {
@@ -783,16 +750,9 @@ class App {
   }
 
   removeDisplaySnippets() {
-    this.snippetSection.innerHTML = '';
-    this.originalCards.forEach((card) => {
-      this.snippetSection.appendChild(card);
-    });
-
-    Object.assign(this.snippetSection.style, {
-      display: 'grid',
-      textAlign: 'unset',
-      alignContent: 'unset',
-    });
+    this.snippetScroll.style.display = 'none';
+    this.snippetSection.style.display = 'grid';
+    this.noSnippets.style.display = 'none';
   }
 }
 
