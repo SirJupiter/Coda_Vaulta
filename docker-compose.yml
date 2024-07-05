@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend # Adjust this to the path of your backend directory
+      dockerfile: Dockerfile
+    ports:
+      - '5001:5000' # Changed port from 5000 to 5001
+    volumes:
+      - ./backend:/usr/src/app # Adjust this to the path of your backend directory
+    restart: always
+    networks:
+      - my-main-net
+
+  frontend:
+    build:
+      context: ./frontend # Adjust this to the path of your frontend directory
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+    volumes:
+      - ./frontend:/usr/share/nginx/html # Adjust this to the path of your frontend directory
+    restart: always
+    networks:
+      - my-main-net
+
+networks:
+  my-main-net:
+    external: true

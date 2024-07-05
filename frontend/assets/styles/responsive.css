@@ -171,5 +171,5 @@
 
 /* Remove Welcome <name> on Mobile Screen */
 #container-a .welcome-text {
-  visibility: hidden;
+  display: none !important;
 }
