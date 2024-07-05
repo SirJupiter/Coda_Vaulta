@@ -17,7 +17,7 @@ services:
       context: ./frontend # Adjust this to the path of your frontend directory
       dockerfile: Dockerfile
     ports:
-      - '80:80'
+      - '6000:80'
     volumes:
       - ./frontend:/usr/share/nginx/html # Adjust this to the path of your frontend directory
     restart: always
