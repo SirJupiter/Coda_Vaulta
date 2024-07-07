@@ -390,7 +390,7 @@ def get_user_snippets():
 
         return jsonify(snippets), 200
     else:
-        return jsonify({"error": "No snippet found"}), 200
+        return jsonify({}), 200
 
 
 @api.route('/user/update_snippet', methods=['PUT'], strict_slashes=False)
@@ -508,4 +508,4 @@ def delete_user_snippet():
 app.register_blueprint(api, url_prefix='/coda_vaulta/api')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True, threaded=True)

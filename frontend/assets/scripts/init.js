@@ -1,7 +1,7 @@
 // const { options } = require('request');
 
 class App {
-  static #baseUrl = 'http://sirjupiter.pythonanywhere.com/coda_vaulta/api/';
+  static #baseUrl = 'http://127.0.0.1:5000/coda_vaulta/api/';
 
   constructor() {
     this.registerOverlay = document.getElementById('register-overlay');
@@ -32,8 +32,6 @@ class App {
   initEvents() {
     // Check if user is already logged in
     this.checkIfLoggedIn();
-
-    // this.storeOriginalCards();
 
     // Show registerOverlay
     document.querySelector('.register').addEventListener('click', () => {
@@ -96,12 +94,6 @@ class App {
     });
   }
 
-  // storeOriginalCards() {
-  //   const cards = Array.from(document.getElementsByClassName('cards'));
-  //   const originalCards = [...cards];
-  //   this.originalCards = originalCards;
-  // }
-
   isEmptyLocalStorage() {
     return (
       localStorage.getItem('username') === null ||
@@ -130,30 +122,47 @@ class App {
 
         this.checkTokenValidity()
           .then((data) => {
-            console.log('Success:', data);
+            console.log('Token is valid:', data);
             if (this.isLoggedIn()) {
-              const welcome = document.querySelector(
-                '#container-a .welcome-text'
-              );
-              welcome.textContent = `Welcome,  ${this.username} 😎🎉`;
-
-              welcome.style.display = 'block';
-              document.querySelector('.sign-in').textContent = 'Logout';
-              document.querySelector('.register').style.display = 'none';
-
-              this.showSnippetDisplayBoard();
-              this.displaySnippets();
-              this.showCreateSnippetForm();
+              this.updateLoggedInUI();
             }
           })
           .catch((error) => {
             console.error('Token validation error:', error);
-            localStorage.removeItem('username');
-            localStorage.removeItem('authToken');
-            window.location.href = '/frontend/index.html';
+            this.handleInvalidToken();
           });
       }
     }
+  }
+
+  updateLoggedInUI() {
+    const welcome = document.querySelector('#container-a .welcome-text');
+    welcome.textContent = `Welcome, ${this.username} 😎🎉`;
+    welcome.style.display = 'block';
+
+    const welcome1 = document.createElement('div');
+    welcome1.textContent = `Welcome,  ${this.username} 😎🎉`;
+    Object.assign(welcome1.style, {
+      color: 'white',
+      fontSize: '1.5rem',
+      marginTop: '0.7rem',
+      letterSpacing: '6px',
+      textAlign: 'right',
+    });
+
+    document.querySelector('nav').after(welcome1);
+    document.querySelector('.sign-in').textContent = 'Logout';
+    document.querySelector('.register').style.display = 'none';
+
+    this.showSnippetDisplayBoard();
+    this.displaySnippets();
+    this.showCreateSnippetForm();
+  }
+
+  handleInvalidToken() {
+    localStorage.removeItem('username');
+    localStorage.removeItem('authToken');
+    window.location.href = '/frontend/index.html';
   }
 
   async checkTokenValidity() {
@@ -674,6 +683,7 @@ class App {
 
           if (snippets.length > 0) {
             this.displaySnippetsList(snippets);
+            this.noSnippets.style.display = 'none';
           } else {
             const message = `${this.username}, you have no snippets yet.`;
             this.displayNoSnippetsMessage(message);
@@ -687,6 +697,11 @@ class App {
 
   displayNoSnippetsMessage(message) {
     this.snippetSection.style.display = 'none';
+    const snippetCardContainer = document.querySelector('.card-container');
+    while (snippetCardContainer.lastChild) {
+      snippetCardContainer.removeChild(snippetCardContainer.lastChild);
+    }
+    this.snippetScroll.style.display = 'none';
 
     // Append error message to h5 tag in noSnippets section
     document.querySelector('#noSnippets h5').textContent = message;
@@ -696,6 +711,11 @@ class App {
   displaySnippetsList(snippets) {
     this.snippetSection.style.display = 'none';
 
+    const snippetCardContainer = document.querySelector('.card-container');
+    while (snippetCardContainer.lastChild) {
+      snippetCardContainer.removeChild(snippetCardContainer.lastChild);
+    }
+
     // Create and append the snippet cards
     snippets.forEach((snippet) => {
       const card = this.createSnippetCard(snippet);
@@ -703,7 +723,7 @@ class App {
       card.addEventListener('click', () =>
         this.renderSnippetOnSnippetBoard(snippet)
       );
-      document.querySelector('.card-container').appendChild(card);
+      snippetCardContainer.appendChild(card);
     });
 
     this.snippetScroll.style.display = 'block';
