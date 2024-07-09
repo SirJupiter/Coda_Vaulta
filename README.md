@@ -2,7 +2,7 @@
 
 [Coda Vaulta](https://coda-vaulta-frontend.vercel.app/)
 
-![alt text](../Screenshot%202024-07-09%20172926.png)
+![Coda Vaulta Screenshot](frontend/assets/images/Screenshot%202024-07-09%20172926.png)
 
 ## Table of Contents
 
@@ -167,8 +167,8 @@ This Python script utilizes the Flask framework to create a web application that
 - **Flask-JWT-Extended:** An extension for Flask that adds support for JWT-based authentication.
 - **Flask-CORS:** An extension for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible.
 - **datetime:** Standard Python module for manipulating dates and times.
-- **models:** A custom module containing the ORM (Object-Relational Mapping) models for `User` and `Snippet` inside [user.py](../backend/models/user.py) and [snippet.py](../backend/models/snippet.py).
-- **utilities:** A custom module, from [utilities.py](../backend/utilities.py), containing utility functions such as `verify_password`.
+- **models:** A custom module containing the ORM (Object-Relational Mapping) models for `User` and `Snippet` inside [user.py](backend/models/user.py) and [snippet.py](backend/models/snippet.py).
+- **utilities:** A custom module, from [utilities.py](backend/utilities.py), containing utility functions such as `verify_password`.
 
 ### Configuration
 
