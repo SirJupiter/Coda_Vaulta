@@ -15,10 +15,14 @@ from models import storage
 from datetime import timedelta
 from flask_cors import CORS
 from utilities import verify_password, format_datetime
+from dotenv import load_dotenv
+import os
 
 
 app = Flask(__name__)
-app.config['JWT_SECRET_KEY'] = 'codavaulta_secret_key'
+
+load_dotenv()
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 
 # Set token expiration to 24 hours
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
@@ -28,7 +32,6 @@ jwt = JWTManager(app)
 
 # CORS(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-# CORS(app, resources={r"/api/*": {"origins": "http://localhost:5000"}})
 
 # Blueprint creation
 api = Blueprint('api', __name__)
