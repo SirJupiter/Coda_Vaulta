@@ -1,6 +1,8 @@
 # CODA VAULTA: Effortlessly Save, Organize, and Share Your Code Snippets
 [Coda Vaulta](https://coda-vaulta-frontend.vercel.app/)
 
+![alt text](https://drive.google.com/file/d/1OAUOH0WCAbVslfP9Z4Fb0vR2LHZvgc1B/view?usp=sharing)
+
 ## Table of Contents
 
 - [Overview](#overview)
@@ -18,8 +20,8 @@
   - [Configuration](#configuration)
   - [Endpoints](#endpoints)
     - [User Management](#user-management)
-  - [Snippet Management](#snippet-management)
-  - [Protected Test Endpoint](#protected-test-endpoint)
+  	- [Snippet Management](#snippet-management)
+  	- [Protected Test Endpoint](#protected-test-endpoint)
   - [Functions](#functions)
   - [Security Considerations](#security-considerations)
 - [Contributing](#contributing)
@@ -174,24 +176,24 @@ This Python script utilizes the Flask framework to create a web application that
 
 ### Endpoints
 
-- #### User Management
+#### User Management
 
-	- `/api/user/sign_up` (POST): Allows new users to sign up by providing a username, email, and password.
-	- `/api/user/login` (POST): Authenticates users and returns a JWT access token.
-	- `/api/user/logout` (POST): Logs out a user. Note: The current implementation does not invalidate the JWT token.
-	- `/api/users` (GET): Retrieves a list of all users.
+- `/api/user/sign_up` (POST): Allows new users to sign up by providing a username, email, and password.
+- `/api/user/login` (POST): Authenticates users and returns a JWT access token.
+- `/api/user/logout` (POST): Logs out a user. Note: The current implementation does not invalidate the JWT token.
+- `/api/users` (GET): Retrieves a list of all users.
 
-- #### Snippet Management
+#### Snippet Management
 
-	- `/api/snippets` (GET): Retrieves all snippets.
-	- `/api/user/create_snippet` (POST): Allows authenticated users to create a new snippet.
-	- `/api/user/get_snippets` (GET): Retrieves all snippets created by the authenticated user.
-	- `/api/user/update_snippet` (PUT): Allows users to update their snippets.
-	- `/api/user/delete_snippet` (DELETE): Allows users to delete their snippets.
+- `/api/snippets` (GET): Retrieves all snippets.
+- `/api/user/create_snippet` (POST): Allows authenticated users to create a new snippet.
+- `/api/user/get_snippets` (GET): Retrieves all snippets created by the authenticated user.
+- `/api/user/update_snippet` (PUT): Allows users to update their snippets.
+- `/api/user/delete_snippet` (DELETE): Allows users to delete their snippets.
 
-- #### Protected Test Endpoint
+#### Protected Test Endpoint
 
-	- `/api/protected` (GET): A test endpoint that requires authentication. Returns the email of the authenticated user.
+- `/api/protected` (GET): A test endpoint that requires authentication. Returns the email of the authenticated user.
 
 ### Functions
 
