@@ -1,7 +1,8 @@
 # CODA VAULTA: Effortlessly Save, Organize, and Share Your Code Snippets
+
 [Coda Vaulta](https://coda-vaulta-frontend.vercel.app/)
 
-![alt text](https://drive.google.com/file/d/1OAUOH0WCAbVslfP9Z4Fb0vR2LHZvgc1B/view?usp=sharing)
+![alt text](../Screenshot%202024-07-09%20172926.png)
 
 ## Table of Contents
 
@@ -20,8 +21,8 @@
   - [Configuration](#configuration)
   - [Endpoints](#endpoints)
     - [User Management](#user-management)
-  	- [Snippet Management](#snippet-management)
-  	- [Protected Test Endpoint](#protected-test-endpoint)
+    - [Snippet Management](#snippet-management)
+    - [Protected Test Endpoint](#protected-test-endpoint)
   - [Functions](#functions)
   - [Security Considerations](#security-considerations)
 - [Contributing](#contributing)
@@ -166,8 +167,8 @@ This Python script utilizes the Flask framework to create a web application that
 - **Flask-JWT-Extended:** An extension for Flask that adds support for JWT-based authentication.
 - **Flask-CORS:** An extension for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible.
 - **datetime:** Standard Python module for manipulating dates and times.
-- **models:** A custom module containing the ORM (Object-Relational Mapping) models for `User` and `Snippet` inside [user.py](../Coda_Vaulta/backend/models/user.py) and [snippet.py](../Coda_Vaulta/backend/models/snippet.py).
-- **utilities:** A custom module, from [utilities.py](../Coda_Vaulta/backend/utilities.py), containing utility functions such as `verify_password`.
+- **models:** A custom module containing the ORM (Object-Relational Mapping) models for `User` and `Snippet` inside [user.py](../backend/models/user.py) and [snippet.py](../backend/models/snippet.py).
+- **utilities:** A custom module, from [utilities.py](../backend/utilities.py), containing utility functions such as `verify_password`.
 
 ### Configuration
 
@@ -236,7 +237,9 @@ Coda Vaulta welcomes contributions from the developer community! If you're inter
 - ALX Software Engineering Cohorts 20 and 1-Blended peers.
 
 ## Author
-👤  ### Tobiloba Adeleke
+
+👤 ### Tobiloba Adeleke
+
 - GitHub: [SirJupiter](https://github.com/SirJupiter)
 
 Tobiloba is a backend software engineer, learning on the ALX Software Engineering program as at when Coda Vaulta was created _(July 2024)_ as a portfolio project for the conclusion of the foundations phase. He is versed in the frontend arena, making use of JavaScript and some basic React in getting the app UI done at the present level of his training. He worked on the system design, database and REST API for the Coda Vaulta project. His knowledge in both front end and back end makes it possible for him to integrate both sides of the app and understand how they work together.
