@@ -685,7 +685,7 @@ class App {
             this.displaySnippetsList(snippets);
             this.noSnippets.style.display = 'none';
           } else {
-            const message = `${this.username}, you have no snippets yet.`;
+            const message = `${this.username}, you have no snippets.`;
             this.displayNoSnippetsMessage(message);
           }
         })
